@@ -191,7 +191,7 @@ void flb_test_in_proc_absent_process(void)
     in_ffd = flb_input(ctx, (char *) "proc", NULL);
     TEST_CHECK(in_ffd >= 0);
     flb_input_set(ctx, in_ffd, "tag", "test",
-                  "interval_sec", "1", "proc_name", "",
+                  "interval_sec", "1", "proc_name", "fake",
                   "alert", "true", "mem", "on", "fd", "on", NULL);
 
     out_ffd = flb_output(ctx, (char *) "lib", &cb);
@@ -214,7 +214,7 @@ TEST_LIST = {
     {"disk_flush",    flb_test_in_disk_flush},
 #endif
 #ifdef in_proc
-    {"proc_flush",    flb_test_in_proc_flush},
+   {"proc_flush",    flb_test_in_proc_flush},
     {"proc_absent_process",     flb_test_in_proc_absent_process},
 #endif
 #ifdef in_head
