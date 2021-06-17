@@ -411,13 +411,13 @@ static int net_connect_async(int fd,
             /* Connection is broken, not much to do here */
             str = strerror_r(error, so_error_buf, sizeof(so_error_buf));
             flb_error("[net] TCP connection failed: %s:%i (%s)",
-                      u->tcp_host, u->tcp_port, str);
+                      u->host, u->port, str);
             return -1;
         }
     }
     else {
         flb_error("[net] TCP connection, unexpected error: %s:%i",
-                  u->tcp_host, u->tcp_port);
+                  u->host, u->port);
         return -1;
     }
 

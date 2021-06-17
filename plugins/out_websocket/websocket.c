@@ -208,7 +208,7 @@ static void cb_ws_flush(const void *data, size_t bytes,
     u_conn = flb_upstream_conn_get(u);
 
     if (!u_conn) {
-        flb_error("[out_ws] no upstream connections available to %s:%i", u->tcp_host, u->tcp_port);
+        flb_error("[out_ws] no upstream connections available to %s:%i", u->host, u->port);
         ctx->handshake = 1;
         FLB_OUTPUT_RETURN(FLB_RETRY);
     }

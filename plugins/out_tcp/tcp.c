@@ -71,7 +71,7 @@ static void cb_tcp_flush(const void *data, size_t bytes,
     u_conn = flb_upstream_conn_get(u);
     if (!u_conn) {
         flb_plg_error(ctx->ins, "no upstream connections available to %s:%i",
-                      u->tcp_host, u->tcp_port);
+                      u->host, u->port);
         FLB_OUTPUT_RETURN(FLB_RETRY);
     }
 

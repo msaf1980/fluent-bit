@@ -86,7 +86,7 @@ static int http_post(struct flb_out_http *ctx,
     u_conn = flb_upstream_conn_get(u);
     if (!u_conn) {
         flb_plg_error(ctx->ins, "no upstream connections available to %s:%i",
-                      u->tcp_host, u->tcp_port);
+                      u->host, u->port);
         return FLB_RETRY;
     }
 

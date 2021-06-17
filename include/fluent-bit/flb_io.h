@@ -38,9 +38,11 @@
 #define FLB_IO_OPT_TLS     4  /* use TCP and optional TLS               */
 #define FLB_IO_ASYNC       8  /* use async mode (depends on event loop) */
 #define FLB_IO_TCP_KA     16  /* use async mode (depends on event loop) */
+#define FLB_IO_UDP        32  /* use plain UDP                          */
 
 /* Other features */
-#define FLB_IO_IPV6       32  /* network I/O uses IPv6                  */
+#define FLB_IO_IPV6       64  /* network I/O uses IPv6                  */
+
 
 int flb_io_net_connect(struct flb_upstream_conn *u_conn,
                        struct flb_coro *th);

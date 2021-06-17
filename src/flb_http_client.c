@@ -66,7 +66,7 @@ int flb_http_strip_port_from_host(struct flb_http_client *c)
     struct flb_upstream *u = c->u_conn->u;
 
     if (!c->host) {
-        out_host = u->tcp_host;
+        out_host = u->host;
     } else {
         out_host = (char *) c->host;
     }
@@ -561,7 +561,7 @@ static int add_host_and_content_length(struct flb_http_client *c)
             out_host = u->proxied_host;
         }
         else {
-            out_host = u->tcp_host;
+            out_host = u->host;
         }
     }
     else {
@@ -580,7 +580,7 @@ static int add_host_and_content_length(struct flb_http_client *c)
             out_port = u->proxied_port;
         }
         else {
-            out_port = u->tcp_port;
+            out_port = u->port;
         }
     }
     else {
@@ -1227,7 +1227,7 @@ int flb_http_do(struct flb_http_client *c, size_t *bytes)
         }
         else {
             flb_error("[http_client] broken connection to %s:%i ?",
-                      c->u_conn->u->tcp_host, c->u_conn->u->tcp_port);
+                      c->u_conn->u->host, c->u_conn->u->port);
             return -1;
         }
     }
@@ -1244,7 +1244,7 @@ int flb_http_do(struct flb_http_client *c, size_t *bytes)
             /* Do not recycle the connection (no more keepalive) */
             flb_upstream_conn_recycle(c->u_conn, FLB_FALSE);
             flb_debug("[http_client] server %s:%i will close connection #%i",
-                      c->u_conn->u->tcp_host, c->u_conn->u->tcp_port,
+                      c->u_conn->u->host, c->u_conn->u->port,
                       c->u_conn->fd);
         }
     }
@@ -1273,7 +1273,7 @@ int flb_http_client_proxy_connect(struct flb_upstream_conn *u_conn)
     int ret = -1;
 
     /* Don't pass proxy when using FLB_HTTP_CONNECT */
-    flb_debug("[upstream] establishing http tunneling to proxy: host %s port %d", u->tcp_host, u->tcp_port);
+    flb_debug("[upstream] establishing http tunneling to proxy: host %s port %d", u->host, u->port);
     c = flb_http_client(u_conn, FLB_HTTP_CONNECT, "", NULL,
                         0, u->proxied_host, u->proxied_port, NULL, 0);
 

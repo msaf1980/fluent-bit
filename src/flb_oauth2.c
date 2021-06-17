@@ -349,7 +349,7 @@ char *flb_oauth2_token_get(struct flb_oauth2 *ctx)
         u_conn = flb_upstream_conn_get(ctx->u);
         if (!u_conn) {
             flb_error("[oauth2] could not get an upstream connection to %s:%i",
-                      ctx->u->tcp_host, ctx->u->tcp_port);
+                      ctx->u->host, ctx->u->port);
             ctx->u->flags &= ~FLB_IO_IPV6;
             return NULL;
         }

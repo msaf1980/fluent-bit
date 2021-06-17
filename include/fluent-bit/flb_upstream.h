@@ -44,14 +44,15 @@
  *   #define  FLB_IO_TLS      2
  *   #define  FLB_IO_ASYNC    8
  *   #define  FLB_IO_TCP_KA  16
+ *   #define  FLB_IO_UDP     32
  * ---
  */
 
 /* Upstream handler */
 struct flb_upstream {
     int flags;
-    int tcp_port;
-    char *tcp_host;
+    int port;
+    char *host;
     int proxied_port;
     char *proxied_host;
     char *proxy_username;

@@ -68,7 +68,6 @@ int flb_io_net_connect(struct flb_upstream_conn *u_conn,
 {
     int ret;
     int async = FLB_FALSE;
-    flb_sockfd_t fd = -1;
     struct flb_upstream *u = u_conn->u;
 
     if (u_conn->fd > 0) {
@@ -85,10 +84,14 @@ int flb_io_net_connect(struct flb_upstream_conn *u_conn,
         async = FLB_FALSE;
     }
 
-    /* Perform TCP connection */
-    fd = flb_net_tcp_connect(u->tcp_host, u->tcp_port, u->net.source_address,
-                             u->net.connect_timeout, async, coro, u_conn);
-    if (fd == -1) {
+    if (u->flags & FLB_IO_UDP) {
+        u_conn->fd = flb_net_udp_connect(u->host, u->port, u->net.source_address);
+    } else {
+        /* Perform TCP connection */
+        u_conn->fd = flb_net_tcp_connect(u->host, u->port, u->net.source_address,
+                                u->net.connect_timeout, async, coro, u_conn);
+    }
+    if (u_conn->fd == -1) {
         return -1;
     }
 
@@ -96,12 +99,14 @@ int flb_io_net_connect(struct flb_upstream_conn *u_conn,
         ret = flb_http_client_proxy_connect(u_conn);
         if (ret == -1) {
             flb_debug("[http_client] flb_http_client_proxy_connect connection #%i failed to %s:%i.",
-                      u_conn->fd, u->tcp_host, u->tcp_port);
-          flb_socket_close(fd);
-          return -1;
+                      u_conn->fd, u->host, u->port);
+            flb_socket_close(u_conn->fd);
+            u_conn->fd = -1;
+            u_conn->event.fd = -1;
+            return -1;
         }
         flb_debug("[http_client] flb_http_client_proxy_connect connection #%i connected to %s:%i.",
-                  u_conn->fd, u->tcp_host, u->tcp_port);
+                  u_conn->fd, u->host, u->port);
     }
 
 #ifdef FLB_HAVE_TLS
@@ -241,7 +246,7 @@ static FLB_INLINE int net_io_write_async(struct flb_coro *co,
                     strerror_r(error, so_error_buf, sizeof(so_error_buf) - 1);
                     flb_error("[io fd=%i] error sending data to: %s:%i (%s)",
                               u_conn->fd,
-                              u->tcp_host, u->tcp_port, so_error_buf);
+                              u->host, u->port, so_error_buf);
 
                     return -1;
                 }

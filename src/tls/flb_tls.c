@@ -298,13 +298,13 @@ int flb_tls_session_create(struct flb_tls *tls,
     session = tls->api->session_create(tls, u_conn);
     if (!session) {
         flb_error("[tls] could not create TLS session for %s:%i",
-                  u->tcp_host, u->tcp_port);
+                  u->host, u->port);
         return -1;
     }
 
     /* Configure virtual host */
     if (!u->tls->vhost) {
-        u->tls->vhost = flb_strdup(u->tcp_host);
+        u->tls->vhost = flb_strdup(u->host);
         if (u->proxied_host) {
             u->tls->vhost = flb_strdup(u->proxied_host);
         }
@@ -339,7 +339,7 @@ int flb_tls_session_create(struct flb_tls *tls,
          */
         if (!co) {
             flb_trace("[io_tls] handshake connection #%i in process to %s:%i",
-                      u_conn->fd, u->tcp_host, u->tcp_port);
+                      u_conn->fd, u->host, u->port);
 
             /* Connect timeout */
             if (u->net.connect_timeout > 0 &&
@@ -348,7 +348,7 @@ int flb_tls_session_create(struct flb_tls *tls,
                 flb_error("[io_tls] handshake connection #%i to %s:%i timed out after "
                           "%i seconds",
                           u_conn->fd,
-                          u->tcp_host, u->tcp_port, u->net.connect_timeout);
+                          u->host, u->port, u->net.connect_timeout);
                 goto error;
             }
 
